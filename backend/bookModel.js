@@ -20,7 +20,6 @@ const Book = sequelize.define('Book', {
   isbn: {
     type: DataTypes.STRING(13),  // Przyjmując, że ISBN ma 13 cyfr
     allowNull: false,
-    unique: true
   },
   price: {
     type: DataTypes.DECIMAL(10, 2),  // Precyzja ceny, np. 99999.99

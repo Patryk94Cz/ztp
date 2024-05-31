@@ -1,14 +1,15 @@
 $(document).ready(function () {
   const API_URL = 'http://localhost:3000/api/books';
+  let isEditMode = false;
 
   // Load books on page load
   loadBooks();
 
-  // Handle form submission for adding a new book
+  // Handle form submission for adding/editing a book
   $('#bookForm').submit(function (event) {
     event.preventDefault();
 
-    const newBook = {
+    const bookData = {
       title: $('#title').val(),
       author: $('#author').val(),
       publisher: $('#publisher').val(),
@@ -17,12 +18,23 @@ $(document).ready(function () {
       price: $('#price').val()
     };
 
+    if (isEditMode) {
+      const bookId = $('#bookId').val();
+      updateBook(bookId, bookData);
+    } else {
+      addBook(bookData);
+    }
+  });
+
+  // Function to add a new book
+  function addBook(bookData) {
     $.ajax({
       type: 'POST',
       url: API_URL,
       contentType: 'application/json',
-      data: JSON.stringify(newBook),
+      data: JSON.stringify(bookData),
       success: function () {
+        $('#bookModal').modal('hide');
         loadBooks();
         $('#bookForm')[0].reset();
       },
@@ -30,7 +42,26 @@ $(document).ready(function () {
         console.error('Error:', error);
       }
     });
-  });
+  }
+
+  // Function to update an existing book
+  function updateBook(bookId, bookData) {
+    $.ajax({
+      type: 'PUT',
+      url: `${API_URL}/${bookId}`,
+      contentType: 'application/json',
+      data: JSON.stringify(bookData),
+      success: function () {
+        $('#bookModal').modal('hide');
+        loadBooks();
+        $('#bookForm')[0].reset();
+        isEditMode = false;
+      },
+      error: function (error) {
+        console.error('Error:', error);
+      }
+    });
+  }
 
   // Load books from the server
   function loadBooks() {
@@ -63,8 +94,10 @@ $(document).ready(function () {
   // Handle edit button click
   function handleEdit() {
     const id = $(this).data('id');
+    isEditMode = true;
     // Fetch book data and show in form for editing
     $.get(`${API_URL}/${id}`, function (book) {
+      $('#bookId').val(book.id);
       $('#title').val(book.title);
       $('#author').val(book.author);
       $('#publisher').val(book.publisher);
@@ -72,32 +105,7 @@ $(document).ready(function () {
       $('#isbn').val(book.isbn);
       $('#price').val(book.price);
       
-      $('#bookForm').off('submit').submit(function (event) {
-        event.preventDefault();
-        const updatedBook = {
-          title: $('#title').val(),
-          author: $('#author').val(),
-          publisher: $('#publisher').val(),
-          year: $('#year').val(),
-          isbn: $('#isbn').val(),
-          price: $('#price').val()
-        };
-
-        $.ajax({
-          type: 'PUT',
-          url: `${API_URL}/${id}`,
-          contentType: 'application/json',
-          data: JSON.stringify(updatedBook),
-          success: function () {
-            loadBooks();
-            $('#bookForm')[0].reset();
-            $('#bookForm').off('submit').submit(handleAddBook);
-          },
-          error: function (error) {
-            console.error('Error:', error);
-          }
-        });
-      });
+      $('#bookModal').modal('show');
     });
   }
 
@@ -115,4 +123,10 @@ $(document).ready(function () {
       }
     });
   }
+
+  // Reset form and isEditMode flag when modal is closed
+  $('#bookModal').on('hidden.bs.modal', function () {
+    $('#bookForm')[0].reset();
+    isEditMode = false;
+  });
 });

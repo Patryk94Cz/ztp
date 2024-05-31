@@ -24,6 +24,20 @@ router.get('/books', async (req, res) => {
   }
 });
 
+// Pobieranie pojedynczego rekordu
+router.get('/books/:id', async (req, res) => {
+  try {
+    const book = await Book.findByPk(req.params.id);
+    if (book) {
+      res.status(200).send(book);
+    } else {
+      res.status(404).send('Book not found');
+    }
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
 // Modyfikacja rekordu
 router.put('/books/:id', async (req, res) => {
   try {
