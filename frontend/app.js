@@ -1,4 +1,4 @@
-const API_URL = 'https://ztp-mdldcubwk-patryks-projects-084cf05c.vercel.app/api/books';
+const API_URL = 'https://ztp-three.vercel.app/api/books';
 
 $(document).ready(function () {
   let isEditMode = false;
