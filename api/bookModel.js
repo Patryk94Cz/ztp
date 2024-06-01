@@ -26,7 +26,8 @@ const Book = sequelize.define('Book', {
     allowNull: false
   }
 }, {
-  timestamps: false
+  timestamps: false,
+  tableName: 'Books'
 });
 
 module.exports = Book;
