@@ -14,7 +14,7 @@ router.post('/books', async (req, res) => {
 router.get('/books', async (req, res) => {
   try {
     const books = await Book.findAll({
-      order: [['title', 'ASC']] // Sortowanie po nazwie
+      order: [['title', 'ASC']]
     });
     res.status(200).send(books);
   } catch (error) {

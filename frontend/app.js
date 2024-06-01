@@ -3,10 +3,8 @@ const API_URL = 'https://ztp-three.vercel.app/api/books';
 $(document).ready(function () {
   let isEditMode = false;
 
-  // Load books on page load
   loadBooks();
 
-  // Handle form submission for adding/editing a book
   $('#bookForm').submit(function (event) {
     event.preventDefault();
 
@@ -27,7 +25,6 @@ $(document).ready(function () {
     }
   });
 
-  // Function to add a new book
   function addBook(bookData) {
     $.ajax({
       type: 'POST',
@@ -45,7 +42,6 @@ $(document).ready(function () {
     });
   }
 
-  // Function to update an existing book
   function updateBook(bookId, bookData) {
     $.ajax({
       type: 'PUT',
@@ -64,7 +60,6 @@ $(document).ready(function () {
     });
   }
 
-  // Load books from the server
   function loadBooks() {
     $.get(API_URL, function (books) {
       $('#bookTableBody').empty();
@@ -86,17 +81,14 @@ $(document).ready(function () {
         `);
       });
 
-      // Attach event handlers for edit and delete buttons
       $('.edit-btn').click(handleEdit);
       $('.delete-btn').click(handleDelete);
     });
   }
 
-  // Handle edit button click
   function handleEdit() {
     const id = $(this).data('id');
     isEditMode = true;
-    // Fetch book data and show in form for editing
     $.get(`${API_URL}/${id}`, function (book) {
       $('#bookId').val(book.id);
       $('#title').val(book.title);
@@ -110,7 +102,6 @@ $(document).ready(function () {
     });
   }
 
-  // Handle delete button click
   function handleDelete() {
     const id = $(this).data('id');
     $.ajax({
@@ -125,7 +116,6 @@ $(document).ready(function () {
     });
   }
 
-  // Reset form and isEditMode flag when modal is closed
   $('#bookModal').on('hidden.bs.modal', function () {
     $('#bookForm')[0].reset();
     isEditMode = false;
