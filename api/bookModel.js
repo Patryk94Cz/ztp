@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('./dbConfig');  // Załóżmy, że masz już skonfigurowane połączenie z bazą danych
+const sequelize = require('./dbConfig');
 
 const Book = sequelize.define('Book', {
   title: {
@@ -18,15 +18,15 @@ const Book = sequelize.define('Book', {
     type: DataTypes.INTEGER
   },
   isbn: {
-    type: DataTypes.STRING(13),  // Przyjmując, że ISBN ma 13 cyfr
+    type: DataTypes.STRING,
     allowNull: false,
   },
   price: {
-    type: DataTypes.DECIMAL(10, 2),  // Precyzja ceny, np. 99999.99
+    type: DataTypes.DECIMAL(10, 2),
     allowNull: false
   }
 }, {
-  timestamps: false  // Wyłączenie domyślnego dodawania kolumn createdAt i updatedAt
+  timestamps: false
 });
 
 module.exports = Book;

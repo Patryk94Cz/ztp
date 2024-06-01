@@ -2,7 +2,6 @@ const express = require('express');
 const Book = require('./bookModel');
 const router = express.Router();
 
-// Dodawanie nowego rekordu
 router.post('/books', async (req, res) => {
   try {
     const book = await Book.create(req.body);
@@ -12,7 +11,6 @@ router.post('/books', async (req, res) => {
   }
 });
 
-// Przeglądanie rekordów
 router.get('/books', async (req, res) => {
   try {
     const books = await Book.findAll({
@@ -24,7 +22,6 @@ router.get('/books', async (req, res) => {
   }
 });
 
-// Pobieranie pojedynczego rekordu
 router.get('/books/:id', async (req, res) => {
   try {
     const book = await Book.findByPk(req.params.id);
@@ -38,7 +35,6 @@ router.get('/books/:id', async (req, res) => {
   }
 });
 
-// Modyfikacja rekordu
 router.put('/books/:id', async (req, res) => {
   try {
     const update = await Book.update(req.body, {
@@ -54,7 +50,6 @@ router.put('/books/:id', async (req, res) => {
   }
 });
 
-// Usuwanie rekordu
 router.delete('/books/:id', async (req, res) => {
   try {
     const book = await Book.destroy({
