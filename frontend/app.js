@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  const API_URL = 'http://localhost:3000/api/books';
+  const API_URL = process.env.API_URL;
   let isEditMode = false;
 
   // Load books on page load
