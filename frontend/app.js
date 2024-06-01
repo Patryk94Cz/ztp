@@ -1,5 +1,6 @@
+const API_URL = process.env.API_URL+'/api/books';
+
 $(document).ready(function () {
-  const API_URL = process.env.API_URL;
   let isEditMode = false;
 
   // Load books on page load
