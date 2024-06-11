@@ -31,18 +31,19 @@
         <table id="bookTable" class="table table-bordered">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Tytuł</th>
-              <th>Autor</th>
-              <th>Wydawca</th>
-              <th>Rok</th>
-              <th>ISBN</th>
-              <th>Cena</th>
+              <th>ID <button class="sort-btn" data-sort="id" data-order="asc">&#9650;</button><button class="sort-btn" data-sort="id" data-order="desc">&#9660;</button></th>
+              <th>Tytuł <button class="sort-btn" data-sort="title" data-order="asc">&#9650;</button><button class="sort-btn" data-sort="title" data-order="desc">&#9660;</button></th>
+              <th>Autor <button class="sort-btn" data-sort="author" data-order="asc">&#9650;</button><button class="sort-btn" data-sort="author" data-order="desc">&#9660;</button></th>
+              <th>Wydawca <button class="sort-btn" data-sort="publisher" data-order="asc">&#9650;</button><button class="sort-btn" data-sort="publisher" data-order="desc">&#9660;</button></th>
+              <th>Rok <button class="sort-btn" data-sort="year" data-order="asc">&#9650;</button><button class="sort-btn" data-sort="year" data-order="desc">&#9660;</button></th>
+              <th>ISBN <button class="sort-btn" data-sort="isbn" data-order="asc">&#9650;</button><button class="sort-btn" data-sort="isbn" data-order="desc">&#9660;</button></th>
+              <th>Cena <button class="sort-btn" data-sort="price" data-order="asc">&#9650;</button><button class="sort-btn" data-sort="price" data-order="desc">&#9660;</button></th>
               <th>Akcje</th>
             </tr>
           </thead>
           <tbody id="bookTableBody"></tbody>
-        </table>        
+        </table>
+              
       </div>
     </div>
   </div>

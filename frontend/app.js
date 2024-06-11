@@ -2,6 +2,7 @@ const API_URL = 'https://ztp-three.vercel.app/api/books';
 
 $(document).ready(function () {
   let isEditMode = false;
+  let booksData = [];
 
   loadBooks();
 
@@ -62,35 +63,35 @@ $(document).ready(function () {
 
   function loadBooks() {
     $.get(API_URL, function (books) {
-      if ($.fn.DataTable.isDataTable('#bookTable')) {
-        $('#bookTable').DataTable().clear().destroy();
-      }
-      
-      $('#bookTableBody').empty();
-      books.forEach(function (book) {
-        $('#bookTableBody').append(`
-          <tr>
-            <td>${book.id}</td>
-            <td>${book.title}</td>
-            <td>${book.author}</td>
-            <td>${book.publisher}</td>
-            <td>${book.year}</td>
-            <td>${book.isbn}</td>
-            <td>${book.price}</td>
-            <td>
-              <button class="btn btn-warning btn-sm edit-btn" data-id="${book.id}">Edit</button>
-              <button class="btn btn-danger btn-sm delete-btn" data-id="${book.id}">Delete</button>
-            </td>
-          </tr>
-        `);
-      });
-  
-      $('.edit-btn').click(handleEdit);
-      $('.delete-btn').click(handleDelete);
-  
-      $('#bookTable').DataTable(); // Initialize DataTables
+      booksData = books;
+      renderBooks(booksData);
     });
-  }  
+  }
+
+  function renderBooks(books) {
+    $('#bookTableBody').empty();
+    books.forEach(function (book) {
+      $('#bookTableBody').append(`
+        <tr>
+          <td>${book.id}</td>
+          <td>${book.title}</td>
+          <td>${book.author}</td>
+          <td>${book.publisher}</td>
+          <td>${book.year}</td>
+          <td>${book.isbn}</td>
+          <td>${book.price}</td>
+          <td>
+            <button class="btn btn-warning btn-sm edit-btn" data-id="${book.id}">Edit</button>
+            <button class="btn btn-danger btn-sm delete-btn" data-id="${book.id}">Delete</button>
+          </td>
+        </tr>
+      `);
+    });
+
+    $('.edit-btn').click(handleEdit);
+    $('.delete-btn').click(handleDelete);
+    $('.sort-btn').click(handleSort);
+  }
 
   function handleEdit() {
     const id = $(this).data('id');
@@ -120,6 +121,19 @@ $(document).ready(function () {
         console.error('Error:', error);
       }
     });
+  }
+
+  function handleSort() {
+    const sortField = $(this).data('sort');
+    const sortOrder = $(this).data('order');
+
+    booksData.sort(function (a, b) {
+      if (a[sortField] < b[sortField]) return sortOrder === 'asc' ? -1 : 1;
+      if (a[sortField] > b[sortField]) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    renderBooks(booksData);
   }
 
   $('#bookModal').on('hidden.bs.modal', function () {
