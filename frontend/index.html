@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Baza Książek</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
     #loginModal .modal-dialog {
@@ -11,6 +13,7 @@
     }
   </style>
 </head>
+
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">Baza Książek</a>
@@ -25,7 +28,7 @@
         <h3>Książki</h3>
       </div>
       <div class="card-body">
-        <table class="table table-bordered">
+        <table id="bookTable" class="table table-bordered">
           <thead>
             <tr>
               <th>ID</th>
@@ -39,7 +42,7 @@
             </tr>
           </thead>
           <tbody id="bookTableBody"></tbody>
-        </table>
+        </table>        
       </div>
     </div>
   </div>
@@ -119,6 +122,8 @@
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

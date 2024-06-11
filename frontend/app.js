@@ -62,6 +62,10 @@ $(document).ready(function () {
 
   function loadBooks() {
     $.get(API_URL, function (books) {
+      if ($.fn.DataTable.isDataTable('#bookTable')) {
+        $('#bookTable').DataTable().clear().destroy();
+      }
+      
       $('#bookTableBody').empty();
       books.forEach(function (book) {
         $('#bookTableBody').append(`
@@ -80,11 +84,13 @@ $(document).ready(function () {
           </tr>
         `);
       });
-
+  
       $('.edit-btn').click(handleEdit);
       $('.delete-btn').click(handleDelete);
+  
+      $('#bookTable').DataTable(); // Initialize DataTables
     });
-  }
+  }  
 
   function handleEdit() {
     const id = $(this).data('id');
