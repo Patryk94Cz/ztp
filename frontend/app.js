@@ -1,5 +1,4 @@
 const API_URL = 'https://ztp-three.vercel.app/api/books';
-// const API_URL = 'https://localhost:3000/api/books';
 
 $(document).ready(function () {
   let isEditMode = false;
@@ -127,12 +126,16 @@ $(document).ready(function () {
   function handleSort() {
     const sortField = $(this).data('sort');
     const sortOrder = $(this).data('order');
+    
+    console.log(`Sorting by ${sortField} in ${sortOrder} order`); // Debug log
 
     booksData.sort(function (a, b) {
       if (a[sortField] < b[sortField]) return sortOrder === 'asc' ? -1 : 1;
       if (a[sortField] > b[sortField]) return sortOrder === 'asc' ? 1 : -1;
       return 0;
     });
+
+    console.log('Sorted Data:', booksData); // Debug log
 
     renderBooks(booksData);
   }
