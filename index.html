@@ -53,7 +53,7 @@
         }
 
         nav {
-            z-index: 10;
+            z-index: 1000;
             position: sticky;
             top: 0;
         }
@@ -79,7 +79,7 @@
 
 <body class="bg-dark text-light">
     <div id="particles-js"></div>
-    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark shadow-sm w-100">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">UI/UX CONF</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -391,41 +391,45 @@
                 <h2 class="lang-pl">Formularz zgłoszeniowy</h2>
                 <h2 class="lang-en hidden">Application Form</h2>
                 <form action="https://formsubmit.co/patczo94@gmail.com" method="POST">
+                    <input type="hidden" name="_subject" value="Nowa wiadomość z formularza UI/UX CONF">
+                    <input type="hidden" name="_next" value="https://twojastrona.pl/dziekujemy">
+                    <input type="hidden" name="_captcha" value="false">
+        
                     <div class="mb-3">
                         <label for="name" class="form-label lang-pl">Imię i nazwisko *</label>
                         <label for="name" class="form-label lang-en hidden">Full Name *</label>
-                        <input type="text" class="form-control" id="name" required>
+                        <input type="text" class="form-control" id="name" name="name" required>
                     </div>
                     <div class="mb-3">
                         <label for="affiliation" class="form-label lang-pl">Afiliacja</label>
                         <label for="affiliation" class="form-label lang-en hidden">Affiliation</label>
-                        <input type="text" class="form-control" id="affiliation">
+                        <input type="text" class="form-control" id="affiliation" name="affiliation">
                     </div>
                     <div class="mb-3">
                         <label for="title" class="form-label lang-pl">Tytuł naukowy</label>
                         <label for="title" class="form-label lang-en hidden">Academic Title</label>
-                        <input type="text" class="form-control" id="title">
+                        <input type="text" class="form-control" id="title" name="title">
                     </div>
                     <div class="mb-3">
                         <label for="abstract" class="form-label lang-pl">Abstrakt wystąpienia (do 200 znaków)</label>
                         <label for="abstract" class="form-label lang-en hidden">Abstract (up to 200 characters)</label>
-                        <textarea class="form-control" id="abstract" maxlength="200"></textarea>
+                        <textarea class="form-control" id="abstract" name="abstract" maxlength="200"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label lang-pl">Email *</label>
                         <label for="email" class="form-label lang-en hidden">Email *</label>
-                        <input type="email" class="form-control" id="email" required>
+                        <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label lang-pl">Nr telefonu *</label>
                         <label for="phone" class="form-label lang-en hidden">Phone Number *</label>
-                        <input type="tel" class="form-control" id="phone" required>
+                        <input type="tel" class="form-control" id="phone" name="phone" required>
                     </div>
                     <button type="submit" class="btn btn-primary lang-pl">Wyślij</button>
                     <button type="submit" class="btn btn-primary lang-en hidden">Submit</button>
                 </form>
             </div>
-        </section>
+        </section>        
     </div>
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
