@@ -1,124 +1,599 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Baza Książek</title>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    #loginModal .modal-dialog {
-      max-width: 400px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI/UX CONF</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <style>
+        body {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .full-height {
+            height: 100vh;
+        }
+
+        #countdown {
+            font-size: 2rem;
+        }
+
+        .centered-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .speaker-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .main-content {
+            height: 100vh;
+            padding-top: 0;
+        }
+
+        nav {
+            z-index: 1000;
+            position: sticky;
+            top: 0;
+        }
+
+        .navbar-dark.bg-dark {
+            border-bottom: .1px solid #ccc;
+        }
+
+        .navbar-light.bg-white {
+            border-bottom: .1px solid #333;
+        }
+
+        .card {
+            min-height: 300px;
+        }
+
+        #map {
+            width: 100%;
+            height: 300px;
+        }
+    </style>
 </head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Baza Książek</a>
-  </nav>
 
-  <div class="container mt-5">
-    <h1 class="text-center">Baza Książek</h1>
-    <button class="btn btn-primary" data-toggle="modal" data-target="#bookModal">Dodaj Nową Książkę</button>
+<body class="bg-dark text-light">
+    <div id="particles-js"></div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">UI/UX CONF</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ui-ux">
+                            <span class="lang-pl">UI/UX</span>
+                            <span class="lang-en hidden">UI/UX</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#mission">
+                            <span class="lang-pl">Misja</span>
+                            <span class="lang-en hidden">Mission</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#participants">
+                            <span class="lang-pl">Uczestnicy</span>
+                            <span class="lang-en hidden">Participants</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#agenda">
+                            <span class="lang-pl">Agenda</span>
+                            <span class="lang-en hidden">Agenda</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#speakers">
+                            <span class="lang-pl">Prelegenci</span>
+                            <span class="lang-en hidden">Speakers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">
+                            <span class="lang-pl">Kontakt</span>
+                            <span class="lang-en hidden">Contact</span>
+                        </a>
+                    </li>
+                </ul>
+                <button id="font-btn" class="btn btn-outline-secondary me-2">A+</button>
+                <button id="lang-btn" class="btn btn-outline-secondary me-2">EN</button>
+                <button id="theme-btn" class="btn btn-outline-secondary">☾</button>
+            </div>
+        </div>
+    </nav>
 
-    <div class="card mt-4">
-      <div class="card-header">
-        <h3>Książki</h3>
-      </div>
-      <div class="card-body">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Tytuł</th>
-              <th>Autor</th>
-              <th>Wydawca</th>
-              <th>Rok</th>
-              <th>ISBN</th>
-              <th>Cena</th>
-              <th>Akcje</th>
-            </tr>
-          </thead>
-          <tbody id="bookTableBody"></tbody>
-        </table>
-      </div>
+    <div class="main-content">
+        <div class="container-fluid full-height d-flex align-items-center justify-content-center">
+            <div class="d-flex text-end me-3">
+                <h1 style="font-size: 60px; font-weight: bold;">
+                    <span class="lang-pl">UI/UX<br>CONF</span>
+                    <span class="lang-en hidden">UI/UX<br>CONF</span>
+                </h1>
+            </div>
+            <div class="d-flex text-start">
+                <div id="countdown">100d 00h00m00s</div>
+            </div>
+        </div>
+
+        <section id="ui-ux" class="container py-5">
+            <h2 class="lang-pl">Co to jest UI oraz UX?</h2>
+            <h2 class="lang-en hidden">What is UI and UX?</h2>
+            <p class="lang-pl">Opis podstawowych różnic i znaczenia UI oraz UX. UI koncentruje się na wyglądzie i
+                estetyce interfejsu, natomiast UX na użyteczności, wrażeniach i satysfakcji użytkownika.</p>
+            <p class="lang-pl">W praktyce łączą się one, tworząc produkty przyjazne i intuicyjne. Firmy coraz częściej
+                zwracają uwagę na te aspekty, aby zapewnić lepsze doświadczenia klientom.</p>
+            <p class="lang-en hidden">Description of basic differences and importance of UI and UX. UI focuses on the
+                look and feel of the interface, while UX emphasizes usability, impressions, and user satisfaction.</p>
+            <p class="lang-en hidden">In practice, they blend together to create products that are both user-friendly
+                and intuitive. Companies increasingly pay attention to these aspects to provide better user experiences.
+            </p>
+        </section>
+
+        <section id="mission" class="container py-5">
+            <h2 class="lang-pl">Misja</h2>
+            <h2 class="lang-en hidden">Mission</h2>
+            <p class="lang-pl">Naszym celem jest propagowanie wiedzy na temat UI/UX. Chcemy, aby użytkownicy rozumieli,
+                dlaczego odpowiednio zaprojektowane interfejsy są kluczowe dla zadowolenia klientów.</p>
+            <p class="lang-pl">Wspieramy innowacje i kształcenie projektantów, by tworzyli rozwiązania spełniające
+                rosnące oczekiwania rynku.</p>
+            <p class="lang-en hidden">Our goal is to promote knowledge about UI/UX. We want users to understand why
+                well-designed interfaces are key to customer satisfaction.</p>
+            <p class="lang-en hidden">We support innovation and the education of designers to create solutions that meet
+                the market's growing expectations.</p>
+        </section>
+
+        <section id="participants" class="container py-5">
+            <h2 class="lang-pl">Uczestnicy</h2>
+            <h2 class="lang-en hidden">Participants</h2>
+            <p class="lang-pl">Informacje dla uczestników konferencji: rejestracja, materiały szkoleniowe, dostęp do
+                prezentacji i paneli dyskusyjnych.</p>
+            <p class="lang-pl">Zachęcamy do wymiany kontaktów i udziału w warsztatach praktycznych.</p>
+            <p class="lang-en hidden">Information for conference participants: registration, training materials, access
+                to presentations and discussion panels.</p>
+            <p class="lang-en hidden">We encourage networking and participation in practical workshops.</p>
+        </section>
+
+        <section id="agenda" class="container py-5">
+            <h2 class="lang-pl">Agenda</h2>
+            <h2 class="lang-en hidden">Agenda</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card bg-white text-dark">
+                        <div class="card-body">
+                            <h5 class="card-title lang-pl">Dzień 1</h5>
+                            <h5 class="card-title lang-en hidden">Day 1</h5>
+                            <p class="card-text lang-pl">09:00 - Otwarcie konferencji</p>
+                            <p class="card-text lang-pl">10:00 - Wykład: Wprowadzenie do UX</p>
+                            <p class="card-text lang-pl">12:00 - Przerwa obiadowa</p>
+                            <p class="card-text lang-pl">14:00 - Panel dyskusyjny: Trendy w UI</p>
+                            <p class="card-text lang-pl">15:30 - Warsztaty interaktywne: Analiza przypadków użycia</p>
+                            <p class="card-text lang-pl">16:30 - Podsumowanie dnia i networking</p>
+
+                            <p class="card-text lang-en hidden">09:00 - Conference Opening</p>
+                            <p class="card-text lang-en hidden">10:00 - Lecture: Introduction to UX</p>
+                            <p class="card-text lang-en hidden">12:00 - Lunch Break</p>
+                            <p class="card-text lang-en hidden">14:00 - Discussion Panel: UI Trends</p>
+                            <p class="card-text lang-en hidden">15:30 - Interactive Workshops: Case Studies</p>
+                            <p class="card-text lang-en hidden">16:30 - Day Summary and Networking</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-white text-dark">
+                        <div class="card-body">
+                            <h5 class="card-title lang-pl">Dzień 2</h5>
+                            <h5 class="card-title lang-en hidden">Day 2</h5>
+                            <p class="card-text lang-pl">09:00 - Warsztaty: Prototypowanie w Figma</p>
+                            <p class="card-text lang-pl">11:00 - Przerwa kawowa</p>
+                            <p class="card-text lang-pl">12:00 - Sesje plakatowe</p>
+                            <p class="card-text lang-pl">13:00 - Prezentacje studiów przypadków</p>
+                            <p class="card-text lang-pl">14:30 - Dyskusja ekspertów: Przyszłość UI/UX</p>
+                            <p class="card-text lang-pl">15:00 - Zakończenie konferencji</p>
+
+                            <p class="card-text lang-en hidden">09:00 - Workshop: Prototyping in Figma</p>
+                            <p class="card-text lang-en hidden">11:00 - Coffee Break</p>
+                            <p class="card-text lang-en hidden">12:00 - Poster Sessions</p>
+                            <p class="card-text lang-en hidden">13:00 - Case Studies Presentations</p>
+                            <p class="card-text lang-en hidden">14:30 - Expert Discussion: The Future of UI/UX</p>
+                            <p class="card-text lang-en hidden">15:00 - Conference Closing</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="speakers" class="container py-5">
+            <h2 class="lang-pl">Prelegenci</h2>
+            <h2 class="lang-en hidden">Speakers</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card text-center bg-white text-dark">
+                        <img src="https://cdn.pixabay.com/photo/2023/04/28/23/32/ai-generated-7957457_1280.png"
+                            class="card-img-top speaker-img mx-auto d-block" alt="Speaker">
+                        <div class="card-body">
+                            <h5 class="card-title">Dr. Jan Kowalski</h5>
+                            <p class="card-text lang-pl">Ekspert UX z ponad 10-letnim doświadczeniem. Bada interakcję
+                                człowiek-komputer i optymalizuje doświadczenia użytkowników.</p>
+                            <p class="card-text lang-en hidden">UX expert with over 10 years of experience. Researches
+                                human-computer interaction and optimizes user experiences.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card text-center bg-white text-dark">
+                        <img src="https://www.aiease.ai/wp-content/uploads/2024/08/outddor-ai-generated-female-headshot-from-AI-Ease.webp"
+                            class="card-img-top speaker-img mx-auto d-block" alt="Speaker">
+                        <div class="card-body">
+                            <h5 class="card-title">Dr. Anna Nowak</h5>
+                            <p class="card-text lang-pl">Specjalista UI, projektuje interfejsy mobilne i webowe.
+                                Laureatka wielu międzynarodowych nagród.</p>
+                            <p class="card-text lang-en hidden">UI specialist, designs mobile and web interfaces. Winner
+                                of many international awards.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card text-center bg-white text-dark">
+                        <img src="https://www.aiease.ai/wp-content/uploads/2024/08/ai-generated-male-headshot-from-AI-Ease-headshot-generator.webp"
+                            class="card-img-top speaker-img mx-auto d-block" alt="Speaker">
+                        <div class="card-body">
+                            <h5 class="card-title">Prof. Marek Zieliński</h5>
+                            <p class="card-text lang-pl">Badacz HCI, specjalizuje się w ergonomii i psychologii
+                                interakcji. Autor licznych publikacji naukowych.</p>
+                            <p class="card-text lang-en hidden">HCI researcher specializing in ergonomics and
+                                interaction psychology. Author of numerous scientific publications.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card text-center bg-white text-dark">
+                        <img src="https://www.aiease.ai/wp-content/uploads/2024/08/ai-generated-professional-headshot-of-a-famle-in-pink-suit-from-AI-Ease.webp"
+                            class="card-img-top speaker-img mx-auto d-block" alt="Speaker">
+                        <div class="card-body">
+                            <h5 class="card-title">Dr. Alicja Sobczak</h5>
+                            <p class="card-text lang-pl">Projektant UX/UI, specjalizuje się w badaniach behawioralnych i
+                                tworzeniu prototypów. Współpracuje z liderami branży.</p>
+                            <p class="card-text lang-en hidden">UX/UI designer researching user behavior and creating
+                                prototypes. Collaborates with industry leaders.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card text-center bg-white text-dark">
+                        <img src="https://www.aiease.ai/wp-content/uploads/2024/08/outdoor-ai-generated-male-headshot-from-AI-Ease-ai-professional-headshot-generator.webp"
+                            class="card-img-top speaker-img mx-auto d-block" alt="Speaker">
+                        <div class="card-body">
+                            <h5 class="card-title">Mgr. Piotr Woźniak</h5>
+                            <p class="card-text lang-pl">Konsultant UX, łączy dane analityczne z projektowaniem. Pomaga
+                                zespołom tworzyć dopasowane rozwiązania.</p>
+                            <p class="card-text lang-en hidden">UX consultant, combines analytical data with design.
+                                Helps teams create tailored solutions.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card text-center bg-white text-dark">
+                        <img src="https://www.aiease.ai/wp-content/uploads/2024/08/creative-ai-generated-headshot-of-a-woman.webp"
+                            class="card-img-top speaker-img mx-auto d-block" alt="Speaker">
+                        <div class="card-body">
+                            <h5 class="card-title">Dr. Natalia Piasecka</h5>
+                            <p class="card-text lang-pl">Specjalista ds. badań, skupia się na testach użyteczności i
+                                ankietach. Pomaga firmom zrozumieć zachowania użytkowników.</p>
+                            <p class="card-text lang-en hidden">Research specialist focusing on usability tests and
+                                surveys. Helps companies understand user behavior.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="container py-5">
+            <h2 class="lang-pl">Kontakt</h2>
+            <h2 class="lang-en hidden">Contact</h2>
+            <p class="lang-pl">
+                Wydarzenie odbędzie się w Pałacu Kultury i Nauki w Warszawie. Więcej informacji pod numerem telefonu +48
+                123 123 123.
+            </p>
+            <p class="lang-en hidden">
+                The event will take place at the Palace of Culture and Science in Warsaw. Call us for more info +48 123
+                123 123.
+            </p>
+            <div id="map"></div>
+        </section>
+
+        <section id="info" class="container">
+            <h2 class="lang-pl">Informacje użytkowe</h2>
+            <h2 class="lang-en hidden">Practical Information</h2>
+            <p class="lang-pl">
+                <strong>Noclegi:</strong> Polecamy hotele w pobliżu Pałacu Kultury i Nauki, takie jak Hotel Warszawa i
+                Novotel Warszawa Centrum.<br>
+                <strong>Dojazd:</strong> Najbliższe przystanki to Metro Centrum, tramwaje 4, 15, 35 oraz autobusy 131,
+                501.<br>
+                <strong>Parking:</strong> Publiczny parking podziemny przy Złotych Tarasach.
+            </p>
+            <p class="lang-en hidden">
+                <strong>Accommodation:</strong> Recommended hotels near the Palace of Culture and Science include Hotel
+                Warszawa and Novotel Warszawa Centrum.<br>
+                <strong>Transport:</strong> Closest stops: Metro Centrum, trams 4, 15, 35, and buses 131, 501.<br>
+                <strong>Parking:</strong> Public underground parking at Złote Tarasy.
+            </p>
+        </section>
+
+        <section id="patronaty" class="container">
+            <h2 class="lang-pl">Patronaty</h2>
+            <h2 class="lang-en hidden">Patronage</h2>
+            <ul>
+                <li class="lang-pl">Ministerstwo Cyfryzacji</li>
+                <li class="lang-en hidden">Ministry of Digitization</li>
+                <li class="lang-pl">Polskie Towarzystwo Projektowe</li>
+                <li class="lang-en hidden">Polish Design Society</li>
+                <li class="lang-pl">Miasto Stołeczne Warszawa</li>
+                <li class="lang-en hidden">City of Warsaw</li>
+            </ul>
+        </section>
+
+        <section id="komitet" class="container">
+            <h2 class="lang-pl">Komitet Organizacyjny</h2>
+            <h2 class="lang-en hidden">Organizing Committee</h2>
+            <ul>
+                <li>
+                    <strong class="lang-pl">Dr. Jan Kowalski</strong>
+                    <strong class="lang-en hidden">Dr. John Smith</strong>
+                    <span class="lang-pl">— Przewodniczący</span>
+                    <span class="lang-en hidden">— Chair</span>
+                </li>
+                <li>
+                    <strong class="lang-pl">Dr. Anna Nowak</strong>
+                    <strong class="lang-en hidden">Dr. Anna Johnson</strong>
+                    <span class="lang-pl">— Członek</span>
+                    <span class="lang-en hidden">— Member</span>
+                </li>
+                <li>
+                    <strong class="lang-pl">Prof. Marek Zieliński</strong>
+                    <strong class="lang-en hidden">Prof. Mark Green</strong>
+                    <span class="lang-pl">— Doradca</span>
+                    <span class="lang-en hidden">— Advisor</span>
+                </li>
+            </ul>
+        </section>
+
+        <section id="form" class="container py-2 justify-content-center">
+            <div class="card p-2 bg-dark text-light">
+                <h2 class="lang-pl">Formularz zgłoszeniowy</h2>
+                <h2 class="lang-en hidden">Application Form</h2>
+                <form action="https://formsubmit.co/patczo94@gmail.com" method="POST">
+                    <input type="hidden" name="_subject" value="Nowa wiadomość z formularza UI/UX CONF">
+                    <input type="hidden" name="_captcha" value="false">
+        
+                    <div class="mb-3">
+                        <label for="name" class="form-label lang-pl">Imię i nazwisko *</label>
+                        <label for="name" class="form-label lang-en hidden">Full Name *</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="affiliation" class="form-label lang-pl">Afiliacja</label>
+                        <label for="affiliation" class="form-label lang-en hidden">Affiliation</label>
+                        <input type="text" class="form-control" id="affiliation" name="affiliation">
+                    </div>
+                    <div class="mb-3">
+                        <label for="title" class="form-label lang-pl">Tytuł naukowy</label>
+                        <label for="title" class="form-label lang-en hidden">Academic Title</label>
+                        <input type="text" class="form-control" id="title" name="title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="abstract" class="form-label lang-pl">Abstrakt wystąpienia (do 200 znaków)</label>
+                        <label for="abstract" class="form-label lang-en hidden">Abstract (up to 200 characters)</label>
+                        <textarea class="form-control" id="abstract" name="abstract" maxlength="200"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label lang-pl">Email *</label>
+                        <label for="email" class="form-label lang-en hidden">Email *</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label lang-pl">Nr telefonu *</label>
+                        <label for="phone" class="form-label lang-en hidden">Phone Number *</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary lang-pl">Wyślij</button>
+                    <button type="submit" class="btn btn-primary lang-en hidden">Submit</button>
+                </form>
+            </div>
+        </section>        
     </div>
-  </div>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        const countdown = document.getElementById('countdown');
+        let totalSeconds = 100 * 24 * 60 * 60;
 
-  <div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="bookModalLabel">Dodaj/Edytuj Książkę</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form id="bookForm">
-            <input type="hidden" id="bookId">
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="title">Tytuł</label>
-                <input type="text" class="form-control" id="title" required>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="author">Autor</label>
-                <input type="text" class="form-control" id="author" required>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="publisher">Wydawca</label>
-                <input type="text" class="form-control" id="publisher" required>
-              </div>
-              <div class="form-group col-md-4">
-                <label for="year">Rok</label>
-                <input type="number" class="form-control" id="year">
-              </div>
-              <div class="form-group col-md-2">
-                <label for="isbn">ISBN</label>
-                <input type="text" class="form-control" id="isbn" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="price">Cena</label>
-              <input type="number" class="form-control" id="price" step="0.01" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Zapisz Książkę</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+        function updateCountdown() {
+            const days = Math.floor(totalSeconds / (24 * 60 * 60));
+            const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+            const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+            const seconds = totalSeconds % 60;
 
-  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="loginModalLabel">Logowanie</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form id="loginForm">
-            <div class="form-group">
-              <label for="username">Nazwa Użytkownika</label>
-              <input type="text" class="form-control" id="username" required>
-            </div>
-            <div class="form-group">
-              <label for="password">Hasło</label>
-              <input type="password" class="form-control" id="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Zaloguj</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+            countdown.textContent = `${days}d ${String(hours).padStart(2, '0')}h${String(minutes).padStart(2, '0')}m${String(seconds).padStart(2, '0')}s`;
+            totalSeconds--;
+        }
 
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="app.js"></script>
+        setInterval(updateCountdown, 1000);
+
+        const themeBtn = document.getElementById('theme-btn');
+        themeBtn.addEventListener('click', () => {
+            if (document.body.classList.contains('bg-dark')) {
+                document.body.classList.replace('bg-dark', 'bg-light');
+                document.body.classList.replace('text-light', 'text-dark');
+
+                pJSDom[0].pJS.particles.color.value = ["#333333", "#666666", "#999999", "#cccccc"];
+                pJSDom[0].pJS.particles.line_linked.color = "#000000";
+
+                const navbar = document.querySelector('nav.navbar');
+                navbar.classList.remove('navbar-dark', 'bg-dark');
+                navbar.classList.add('navbar-light', 'bg-white');
+            } else {
+                document.body.classList.replace('bg-light', 'bg-dark');
+                document.body.classList.replace('text-dark', 'text-light');
+
+                pJSDom[0].pJS.particles.color.value = ["#ffffff", "#cccccc", "#999999", "#666666"];
+                pJSDom[0].pJS.particles.line_linked.color = "#ffffff";
+
+                const navbar = document.querySelector('nav.navbar');
+                navbar.classList.remove('navbar-light', 'bg-white');
+                navbar.classList.add('navbar-dark', 'bg-dark');
+            }
+
+            const cards = document.querySelectorAll('#agenda .card, #speakers .card, #form .card');
+            if (document.body.classList.contains('bg-dark')) {
+                cards.forEach(card => {
+                    card.classList.remove('bg-white', 'text-dark');
+                    card.classList.add('bg-secondary', 'text-light');
+                });
+            } else {
+                cards.forEach(card => {
+                    card.classList.remove('bg-secondary', 'text-light');
+                    card.classList.add('bg-white', 'text-dark');
+                });
+            }
+
+            pJSDom[0].pJS.fn.particlesRefresh();
+        });
+
+        const langBtn = document.getElementById('lang-btn');
+        langBtn.addEventListener('click', () => {
+            const plElements = document.querySelectorAll('.lang-pl');
+            const enElements = document.querySelectorAll('.lang-en');
+            if (langBtn.textContent === 'EN') {
+                langBtn.textContent = 'PL';
+                plElements.forEach(el => el.classList.remove('hidden'));
+                enElements.forEach(el => el.classList.add('hidden'));
+            } else {
+                langBtn.textContent = 'EN';
+                plElements.forEach(el => el.classList.add('hidden'));
+                enElements.forEach(el => el.classList.remove('hidden'));
+            }
+        });
+
+        const fontBtn = document.getElementById('font-btn');
+        let currentFontSize = 16;
+        fontBtn.addEventListener('click', () => {
+            currentFontSize += 2;
+            if (currentFontSize > 24) {
+                currentFontSize = 16;
+            }
+            document.body.style.fontSize = currentFontSize + 'px';
+        });
+
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 60,
+                    "density": {
+                        "enable": true,
+                        "value_area": 1000
+                    }
+                },
+                "color": {
+                    "value": ["#ffffff", "#cccccc", "#999999", "#666666"]
+                },
+                "shape": {
+                    "type": "polygon",
+                    "polygon": {
+                        "nb_sides": 6
+                    }
+                },
+                "opacity": {
+                    "value": 0.7,
+                    "random": false
+                },
+                "size": {
+                    "value": 10,
+                    "random": true
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.5,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2,
+                    "direction": "none",
+                    "out_mode": "out",
+                    "bounce": false
+                }
+            },
+            "interactivity": {
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    }
+                },
+                "modes": {
+                    "repulse": {
+                        "distance": 100,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const map = L.map('map').setView([52.231958, 21.006724], 15);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            L.marker([52.231958, 21.006724]).addTo(map)
+                .bindPopup('<span class="lang-pl">Pałac Kultury i Nauki</span><span class="lang-en hidden">Palace of Culture and Science</span>')
+                .openPopup();
+
+            map.invalidateSize();
+        });
+    </script>
 </body>
+
 </html>
